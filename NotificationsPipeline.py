@@ -8,6 +8,11 @@ from notifications_pipeline_steps.NotificationsPipelineUserPolicy import Notific
 from notifications_pipeline_steps.NotificationsPipelinePresentation import NotificationsPipelinePresentation
 from notifications_pipeline_steps.NotificationsPipelineDelivery import NotificationsPipelineDelivery
 
+def import_from_string(module_name):
+    # Remove during refactoring
+    class_name = module_name.split(".")[-1]
+    return getattr(importlib.import_module(module_name), class_name)
+
 class NotificationsPipeline(object):
     def __init__(self):
         self.pipeline_step_list = [
@@ -17,17 +22,13 @@ class NotificationsPipeline(object):
         "notifications_pipeline_steps.NotificationsPipelinePresentation",
         "notifications_pipeline_steps.NotificationsPipelineDelivery"
         ]
-    @staticmethod
-    def str2Class(module_name, class_name):
-        # Remove during refactoring
-        return getattr(importlib.import_module(module_name), class_name)
     def on_enter(self, message):
         # Identify first time
         if message.current_step == self.pipeline_step_list[0]:
             message.history = [nm.NotificationsPipelineHistory() for i in range(len(self.pipeline_step_list) - 1)] # Initialize list of history objects
             message.history[0].onEnter() # Assign the entry timestamp
             message.current_step = self.pipeline_step_list[1] # Update the current step
-            NotificationsPipeline.str2Class(message.current_step,message.current_step.split(".")[-1]).process_message(message) # Current step processes the message
+            import_from_string(message.current_step).process_message(message) # Current step processes the message
             message.history[0].onExit()
             # exit()
             self.on_enter(message)
@@ -39,6 +40,6 @@ class NotificationsPipeline(object):
             message.history[pipeline_step_pointer].onEnter()
             pipeline_step_pointer += 1
             message.current_step = self.pipeline_step_list[pipeline_step_pointer] # Update the current step
-            NotificationsPipeline.str2Class(self.pipeline_step_list[pipeline_step_pointer],self.pipeline_step_list[pipeline_step_pointer].split(".")[-1]).process_message(message) # Current step processes the message
+            import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message) # Current step processes the message
             message.history[pipeline_step_pointer-1].onExit()
             self.on_enter(message)
