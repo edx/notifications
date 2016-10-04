@@ -6,6 +6,7 @@ import NotificationsMessage as nm
 import NotificationsPipeline as np
 import uuid
 from datetime import datetime
+import pytz
 
 class TestNotificationsPipeline(unittest.TestCase):
 
@@ -22,8 +23,8 @@ class TestNotificationsPipeline(unittest.TestCase):
         history_list = message.history
         for i in history_list:
             self.assertEqual(type(i),type( nm.NotificationsPipelineHistory() ) )
-            self.assertEqual(type(i.enter_timestamp),type(datetime.utcnow()))
-            self.assertEqual(type(i.exit_timestamp),type(datetime.utcnow()))
+            self.assertEqual(type(i.enter_timestamp),type(pytz.utc.localize(datetime.utcnow())))
+            self.assertEqual(type(i.exit_timestamp),type(pytz.utc.localize(datetime.utcnow())))
         self.assertEqual(message.current_step,np.NotificationsPipeline.pipeline_step_list[-1])
 if __name__ == '__main__':
     unittest.main()
