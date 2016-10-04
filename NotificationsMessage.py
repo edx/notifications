@@ -17,26 +17,6 @@ class NotificationsPipelineHistory(object): # Pipeline History Object
         """
         self.exit_timestamp = pytz.utc.localize(datetime.utcnow())
 
-'''
-class NotificationsRecipientsBase(object):
-    pass
-
-class NotificationsRecipientsList(NotificationsRecipientsBase):
-    def __init__(self):
-        self.user_list = []
-
-class NotificationsRecipients(NotificationsRecipientsBase):
-    def __init__(self, resolver_id):
-        self.user_query = {}
-        self.resolver_id = resolver_id # unique id for the user-targeting resolver
-
-
-class NotificationsPresentationData(object):
-    pass
-
-class NotificationsDeliveryData(object):
-    pass
-'''
 class NotificationsMessage(object):
 
     def __init__ (self, name="edx.notifications.forums.post.created", fields=None, recipients=None):
@@ -47,5 +27,3 @@ class NotificationsMessage(object):
         self.expiration_time = pytz.utc.localize(datetime.utcnow()) + timedelta(minutes = 5) # Message expires five minutes after the current time
         self.history = [] # list of NotificationsPipelineHistory
         self.current_step = "NotificationsPipelineComposer" # Indicates the current step in the pipeline
-
-''' TODO: Replace with Smarter Objects '''

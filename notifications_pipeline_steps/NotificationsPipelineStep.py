@@ -9,4 +9,3 @@ class NotificationsPipelineStep(object):
             print notifications_message.name + " " + str(notifications_message.id) + " has expired. It will be dropped." # Dropping unimplemented
         else:
             print notifications_message.name + " " + str(notifications_message.id) + " has not expired. It will be forwarded."
-''' TODO: Clean up everything according to PEP-8 standards. '''
