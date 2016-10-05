@@ -24,11 +24,10 @@ class NotificationsPipeline(object):
     def on_enter(self, message):
         # Identify first time
         if message.current_step == self.pipeline_step_list[0]:
-            message.history = [nm.NotificationsPipelineHistory() for i in range(len(self.pipeline_step_list) - 1)] # Initialize list of history objects
-            message.history[0].onEnter() # Assign the entry timestamp
             message.current_step = self.pipeline_step_list[1] # Update the current step
+            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Started'))
             import_from_string(message.current_step).process_message(message) # Current step processes the message
-            message.history[0].onExit()
+            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Completed'))
             # exit()
             self.on_enter(message)
         # Identify last time
@@ -36,9 +35,9 @@ class NotificationsPipeline(object):
             logging.warning(message.name + " " + str(message.id) + " has been delivered.")
         else:
             pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
-            message.history[pipeline_step_pointer].onEnter()
             pipeline_step_pointer += 1
             message.current_step = self.pipeline_step_list[pipeline_step_pointer] # Update the current step
+            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Started'))
             import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message) # Current step processes the message
-            message.history[pipeline_step_pointer-1].onExit()
+            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Completed'))
             self.on_enter(message)

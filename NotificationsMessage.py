@@ -1,23 +1,13 @@
 from datetime import datetime, timedelta
-import pytz
-import uuid
+import pytz, uuid
 
 class NotificationsPipelineHistory(object): # Pipeline History Object
-    def __init__(self):
-        self.enter_timestamp = None
-        self.exit_timestamp = None
+    def __init__(self, step, event):
+        self.step = step
+        self.event = event
+        self.timestamp = pytz.utc.localize(datetime.utcnow())
     def __repr__(self):
-        return '<Entry Timestamp: %s, Exit Timestamp: %s>' % (self.enter_timestamp, self.exit_timestamp)
-    def onEnter(self):
-        """
-        Update timestamp for enter.
-        """
-        self.enter_timestamp = pytz.utc.localize(datetime.utcnow())
-    def onExit(self):
-        """
-        Update timestamp for exit.
-        """
-        self.exit_timestamp = pytz.utc.localize(datetime.utcnow())
+        return '<%s %s: %s>' %(self.step, self.event, self.timestamp)
 
 class NotificationsMessage(object):
 

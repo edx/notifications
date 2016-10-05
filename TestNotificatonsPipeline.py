@@ -20,12 +20,11 @@ class TestNotificationsPipeline(unittest.TestCase):
         np_object.on_enter(message)
         # Check the vars of the message.
         self.assertIsInstance(message.id, uuid.UUID)
-        self.assertEqual(len(message.history),len(np_object.pipeline_step_list) - 1)
+        self.assertEqual( len(message.history), (len(np_object.pipeline_step_list)-1)*2 )
         history_list = message.history
         for i in history_list:
             self.assertIsInstance(i,nm.NotificationsPipelineHistory)
-            self.assertEqual(type(i.enter_timestamp), type(pytz.utc.localize(datetime.utcnow())) )
-            self.assertEqual(type(i.exit_timestamp), type(pytz.utc.localize(datetime.utcnow())) )
-            self.assertEqual(message.current_step,np_object.pipeline_step_list[-1])
+            self.assertEqual(type(i.timestamp), type(pytz.utc.localize(datetime.utcnow())) )
+            # self.assertEqual(message.current_step,np_object.pipeline_step_list[-1]) # Testing if there are two instance for each pipeline step
 if __name__ == '__main__':
     unittest.main()
