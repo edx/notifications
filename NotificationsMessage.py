@@ -6,6 +6,8 @@ class NotificationsPipelineHistory(object): # Pipeline History Object
     def __init__(self):
         self.enter_timestamp = None
         self.exit_timestamp = None
+    def __repr__(self):
+        return '<Entry Timestamp: %s, Exit Timestamp: %s>' % (self.enter_timestamp, self.exit_timestamp)
     def onEnter(self):
         """
         Update timestamp for enter.
