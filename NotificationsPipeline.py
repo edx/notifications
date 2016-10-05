@@ -1,7 +1,6 @@
 from datetime import datetime
-import pytz
+import pytz, importlib, logging
 import NotificationsMessage as nm
-import importlib
 # Imports for all the pipeline steps
 from notifications_pipeline_steps.NotificationsPipelineUserTargeting import NotificationsPipelineUserTargeting
 from notifications_pipeline_steps.NotificationsPipelineUserPolicy import NotificationsPipelineUserPolicy
@@ -34,7 +33,7 @@ class NotificationsPipeline(object):
             self.on_enter(message)
         # Identify last time
         elif message.current_step == self.pipeline_step_list[-1]:
-            print message.name + " " + str(message.id) + " has been delivered."
+            logging.warning(message.name + " " + str(message.id) + " has been delivered.")
         else:
             pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
             message.history[pipeline_step_pointer].onEnter()
