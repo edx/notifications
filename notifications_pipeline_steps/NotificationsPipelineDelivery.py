@@ -8,6 +8,4 @@ class NotificationsPipelineDelivery(NotificationsPipelineStep.NotificationsPipel
         if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
             logging.warning(message.name + " " + str(message.id) + " has expired. It will be dropped.")
         else:
-            log_file = open("logs/"+str(message.id)+".txt","w")
-            log_file.write(str(vars(message)))
-            log_file.close()
+            logging.info(str(vars(message)))

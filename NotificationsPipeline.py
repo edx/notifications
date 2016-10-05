@@ -22,22 +22,13 @@ class NotificationsPipeline(object):
         "notifications_pipeline_steps.NotificationsPipelineDelivery"
         ]
     def on_enter(self, message):
-        # Identify first time
-        if message.current_step == self.pipeline_step_list[0]:
-            message.current_step = self.pipeline_step_list[1] # Update the current step
-            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Started'))
-            import_from_string(message.current_step).process_message(message) # Current step processes the message
-            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Completed'))
-            # exit()
-            self.on_enter(message)
-        # Identify last time
-        elif message.current_step == self.pipeline_step_list[-1]:
+        pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
+        pipeline_step_pointer += 1
+        message.current_step = self.pipeline_step_list[pipeline_step_pointer] # Update the current step
+        message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Started'))
+        import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message) # Current step processes the message
+        message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Completed'))
+        if message.current_step == self.pipeline_step_list[-1]:
             logging.warning(message.name + " " + str(message.id) + " has been delivered.")
         else:
-            pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
-            pipeline_step_pointer += 1
-            message.current_step = self.pipeline_step_list[pipeline_step_pointer] # Update the current step
-            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Started'))
-            import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message) # Current step processes the message
-            message.history.append(nm.NotificationsPipelineHistory(message.current_step, 'Completed'))
             self.on_enter(message)
