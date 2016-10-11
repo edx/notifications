@@ -1,3 +1,0 @@
-import NotificationsPipelineStep
-class NotificationsPipelineUserTargeting(NotificationsPipelineStep.NotificationsPipelineStep):
-    pass

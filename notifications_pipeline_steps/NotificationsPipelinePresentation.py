@@ -1,3 +1,0 @@
-import NotificationsPipelineStep
-class NotificationsPipelinePresentation(NotificationsPipelineStep.NotificationsPipelineStep):
-    pass
