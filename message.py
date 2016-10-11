@@ -19,4 +19,4 @@ class NotificationsMessage(object):
         self.id = uuid.uuid4()
         self.expiration_time = pytz.utc.localize(datetime.utcnow()) + timedelta(minutes = 5) # Message expires five minutes after the current time
         self.history = [] # list of PipelineHistory
-        self.current_step = "PipelineComposer" # Indicates the current step in the pipeline
+        self.current_step = "PipelineComposer"
