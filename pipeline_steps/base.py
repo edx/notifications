@@ -7,6 +7,6 @@ class PipelineStep(object):
     def process_message(message):
         logging.warning(message.current_step + " has received " + message.name + " " + str(message.id))
         if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
-            logging.warning(message.name + " " + str(message.id) + " has expired. It will be dropped." )# Dropping unimplemented
+            logging.warning(message.name + " " + str(message.id) + " has expired. It will be dropped." ) # TODO: Implement dropping
         else:
             logging.warning(message.name + " " + str(message.id) + " has not expired. It will be forwarded.")

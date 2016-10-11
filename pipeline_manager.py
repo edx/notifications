@@ -32,7 +32,7 @@ class Pipeline(object):
         pipeline_step_pointer += 1
         message.current_step = self.pipeline_step_list[pipeline_step_pointer] # Update the current step
         message.history.append(PipelineHistory(message.current_step, 'Started'))
-        import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message) # Current step processes the message
+        import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message)
         message.history.append(PipelineHistory(message.current_step, 'Completed'))
         if message.current_step == self.pipeline_step_list[-1]:
             logging.warning(message.name + " " + str(message.id) + " has been delivered.")
