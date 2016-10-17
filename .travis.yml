@@ -1,0 +1,25 @@
+# Config file for automatic testing at travis-ci.org
+
+sudo: false
+
+language: python
+
+matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=py27
+    - python: 3.5
+      env: TOXENV=py35
+    - python: 2.7
+      env: TOXENV=quality
+  allow_failures:
+    - TOXENV=py35
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - tox
+
+after_success:
+  - codecov
