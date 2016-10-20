@@ -32,6 +32,9 @@ class TestPipeline(unittest.TestCase):
         # Check logging
         self.assertEqual(len(mock_logging.info.call_args_list), 8)  # Successful delivery means 8 calls to logging info
         self.assertEqual(len(mock_logging.warning.call_args_list), 0)
+        if len(mock_logging.warning.call_args_list) != 0:
+            print mock_logging.warning.call_args_list
+
 
 if __name__ == '__main__':
     unittest.main()
