@@ -7,11 +7,11 @@ import unittest
 from uuid import UUID
 
 from mock import patch
+import pytz
 
 from .message import NotificationsMessage, PipelineHistory
 from .pipeline_manager import Pipeline
 
-import pytz
 
 class TestPipeline(unittest.TestCase):
     """
@@ -36,7 +36,10 @@ class TestPipeline(unittest.TestCase):
 
     @patch('notifications.pipeline_steps.base.logging')
     def test_expiry(self, mock_logging):
-        message = NotificationsMessage(name = "edx.notifications.forums.post.created", expiration_time = pytz.utc.localize(datetime.utcnow()) - timedelta(minutes=5))
+        message = NotificationsMessage(
+            name="edx.notifications.forums.post.created",
+            expiration_time=pytz.utc.localize(datetime.utcnow()) - timedelta(minutes=5)
+            )
         pipeline = Pipeline()
         pipeline.process(message)
         # Check the vars of the message

@@ -40,7 +40,12 @@ class NotificationsMessage(object):
     Initialize the NotificationsMessage object containing various attributes required by steps in the pipeline.
     """
 
-    def __init__(self, name, fields=None, recipients=None, expiration_time = pytz.utc.localize(datetime.utcnow()) + timedelta(minutes=5)):
+    def __init__(
+            self,
+            name,
+            fields=None,
+            recipients=None,
+            expiration_time=pytz.utc.localize(datetime.utcnow()) + timedelta(minutes=5)):
         """
         Initialize the NotificationsMessage object with the object name.
 
