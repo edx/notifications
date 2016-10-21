@@ -45,7 +45,7 @@ class NotificationsMessage(object):
             name,
             fields=None,
             recipients=None,
-            expiration_time=pytz.utc.localize(datetime.utcnow()) + timedelta(minutes=5)):
+            expiration_time=None):
         """
         Initialize the NotificationsMessage object with the object name.
 
@@ -65,5 +65,7 @@ class NotificationsMessage(object):
         self.name = name
         self.uuid = uuid.uuid4()
         self.expiration_time = expiration_time
+        if self.expiration_time is None:
+            self.expiration_time = pytz.utc.localize(datetime.utcnow()) + timedelta(minutes=5)
         self.history = []
         self.current_step = "PipelineComposer"
