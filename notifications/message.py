@@ -46,7 +46,7 @@ class NotificationsMessage(object):
             fields=None,
             recipients=None,
             expiration_time=None
-        ):
+    ):
         """
         Initialize the NotificationsMessage object with the object name.
 
