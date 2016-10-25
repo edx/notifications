@@ -65,7 +65,7 @@ class Pipeline(object):
         return_process = import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message)
         if return_process == 1:
             logging.warning("%s %s has been dropped.", message.name, message.uuid)
-            message.history.append(PipelineHistory(message.current_step, 'Completed'))
+            message.history.append(PipelineHistory(message.current_step, 'Expired'))
         else:
             message.history.append(PipelineHistory(message.current_step, 'Completed'))
             if message.current_step == self.pipeline_step_list[-1]:

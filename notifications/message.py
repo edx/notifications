@@ -19,7 +19,7 @@ class PipelineHistory(object):
 
         Args:
             step (str): Current step in the pipeline.
-            event (str): "Started" or "Completed" based on the event associated with step.
+            event (str): "Started", "Completed" or "Expired" based on the event associated with step.
 
         Attributes:
             timestamp: Machine localized timestamp.
@@ -45,7 +45,8 @@ class NotificationsMessage(object):
             name,
             fields=None,
             recipients=None,
-            expiration_time=None):
+            expiration_time=None
+        ):
         """
         Initialize the NotificationsMessage object with the object name.
 
@@ -53,10 +54,10 @@ class NotificationsMessage(object):
             name (str): Namespaced string corresponding to the type of notifications message.
             fields (optional): Fields that may be optionally required by steps in the pipeline.
             recipients (optional list): List of recipients that can be specified on creation.
+            expiration_time (datetime): Time of expiry of message.
 
         Attributes:
             uuid (UUID): Universally unique identified for the message.
-            expiration_time (datetime): Time of expiry of message.
             history (list): List of PipelineHistory objects.
             current_step: Indicates the current step in the pipeline.
         """

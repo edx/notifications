@@ -39,7 +39,7 @@ class TestPipeline(unittest.TestCase):
         message = NotificationsMessage(
             name="edx.notifications.forums.post.created",
             expiration_time=pytz.utc.localize(datetime.utcnow()) - timedelta(minutes=5)
-            )
+        )
         pipeline = Pipeline()
         pipeline.process(message)
         # Check the vars of the message
