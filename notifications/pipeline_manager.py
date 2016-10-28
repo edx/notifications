@@ -53,8 +53,7 @@ class Pipeline(object):
 
     def process(self, message):
         """
-        Handle the updating of timestamps, checking for expiry of message,
-        processing by current step and forwarding to the subsequent step.
+        Handle timestamp updating, expiry of message, processing by current step and forwarding to subsequent step.
 
         Args:
             message: NotificationsMessage object received from the previous step in the pipeline.
