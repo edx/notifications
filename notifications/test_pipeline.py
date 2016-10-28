@@ -31,7 +31,7 @@ class TestPipeline(unittest.TestCase):
             self.assertIsInstance(i, PipelineHistory)
             self.assertIsInstance(i.timestamp, datetime)
         # Check logging
-        self.assertEqual(len(mock_logging.info.call_args_list), 9)  # Successful delivery means 4 calls to logging info
+        self.assertEqual(len(mock_logging.info.call_args_list), 9)  # Successful delivery means 9 calls to logging info
         self.assertEqual(len(mock_logging.warning.call_args_list), 0)
 
     @patch('notifications.pipeline_manager.logging')
