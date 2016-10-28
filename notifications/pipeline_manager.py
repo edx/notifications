@@ -2,8 +2,11 @@
 Manages logic for moving the message through the pipeline.
 """
 
+from datetime import datetime
 import importlib
 import logging
+
+import pytz
 
 from .message import PipelineHistory
 
@@ -50,7 +53,7 @@ class Pipeline(object):
 
     def process(self, message):
         """
-        Handle the updating of timestamps, processing by current step and forwarding to the subsequent step.
+        Handle the updating of timestamps, checking for expiry of message, processing by current step and forwarding to the subsequent step.
 
         Args:
             message: NotificationsMessage object received from the previous step in the pipeline.
@@ -61,14 +64,31 @@ class Pipeline(object):
         pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
         pipeline_step_pointer += 1
         message.current_step = self.pipeline_step_list[pipeline_step_pointer]  # Update the current step
-        message.history.append(PipelineHistory(message.current_step, 'Started'))
-        return_process = import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message)
-        if return_process == 1:
-            logging.warning("%s %s has been dropped.", message.name, message.uuid)
-            message.history.append(PipelineHistory(message.current_step, 'Expired'))
+        if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
+            logging.warning(
+                "%s %s has expired before step %s. It will be dropped.",
+                message.name, message.uuid, message.current_step
+                )
         else:
-            message.history.append(PipelineHistory(message.current_step, 'Completed'))
-            if message.current_step == self.pipeline_step_list[-1]:
-                logging.info("%s %s has been delivered.", message.name, message.uuid)
+            logging.info(
+                "%s %s has not expired before step %s. It will be forwarded.",
+                message.name, message.uuid, message.current_step
+                )
+            message.history.append(PipelineHistory(message.current_step, 'Started'))
+            import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message)
+            if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
+                logging.warning(
+                    "%s %s has expired after step %s. It will be dropped.",
+                    message.name, message.uuid, message.current_step
+                    )
+                message.history.append(PipelineHistory(message.current_step, 'Expired'))
             else:
-                self.process(message)
+                logging.info(
+                    "%s %s has not expired after step %s. It will be forwarded.",
+                    message.name, message.uuid, message.current_step
+                    )
+                message.history.append(PipelineHistory(message.current_step, 'Completed'))
+                if message.current_step == self.pipeline_step_list[-1]:
+                    logging.info("%s %s has been delivered.", message.name, message.uuid)
+                else:
+                    self.process(message)
