@@ -5,8 +5,6 @@ Implements the NotificationsMessage object and smart objects contained within it
 from datetime import datetime, timedelta
 import uuid
 
-import pytz
-
 
 class PipelineHistory(object):
     """
@@ -26,7 +24,7 @@ class PipelineHistory(object):
         """
         self.step = step
         self.event = event
-        self.timestamp = pytz.utc.localize(datetime.utcnow())
+        self.timestamp = datetime.utcnow()
 
     def __repr__(self):
         """
@@ -67,6 +65,6 @@ class NotificationsMessage(object):
         self.uuid = uuid.uuid4()
         self.expiration_time = expiration_time
         if self.expiration_time is None:
-            self.expiration_time = pytz.utc.localize(datetime.utcnow()) + timedelta(minutes=5)
+            self.expiration_time = datetime.utcnow() + timedelta(minutes=5)
         self.history = []
         self.current_step = "PipelineComposer"

@@ -6,8 +6,6 @@ from datetime import datetime
 import importlib
 import logging
 
-import pytz
-
 from .message import PipelineHistory
 
 
@@ -64,7 +62,7 @@ class Pipeline(object):
         pipeline_step_pointer = self.pipeline_step_list.index(message.current_step)
         pipeline_step_pointer += 1
         message.current_step = self.pipeline_step_list[pipeline_step_pointer]  # Update the current step
-        if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
+        if datetime.utcnow() > message.expiration_time:
             logging.warning(
                 "%s %s has expired before step %s. It will be dropped.",
                 message.name, message.uuid, message.current_step
@@ -76,7 +74,7 @@ class Pipeline(object):
                 )
             message.history.append(PipelineHistory(message.current_step, 'Started'))
             import_from_string(self.pipeline_step_list[pipeline_step_pointer]).process_message(message)
-            if pytz.utc.localize(datetime.utcnow()) > message.expiration_time:
+            if datetime.utcnow() > message.expiration_time:
                 logging.warning(
                     "%s %s has expired after step %s. It will be dropped.",
                     message.name, message.uuid, message.current_step
